@@ -1,0 +1,91 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Categorías - Nueva Libreria</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
+</head>
+
+<body>
+
+  <nav class="navbar navbar-custom">
+    <a class="navbar-brand" href="{% url 'inicio' %}">
+      <img src="{% static 'img/logo_NL.png' %}" width="30" height="30" class="d-inline-block align-top" alt="">
+      Inicio
+    </a>
+    <a class="navbar-brand" href="{% url 'libros' %}">Libros</a>
+    <a class="navbar-brand" href="{% url 'autores' %}">Autores</a>
+    <a class="navbar-brand" href="{% url 'categorias' %}">Categorías</a>
+  </nav>
+
+  <div class="container mt-4">
+    <!-- Barra superior -->
+    <div class="bg-primary text-white text-center py-2">
+      <h4>Estas son nuestras categorías</h4>
+    </div>
+
+    <!-- Tabla de categorías -->
+    <div class="mt-4">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody id="tablaCategorias">
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="{% static 'js/mensaje.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    // Inicializa AOS
+    AOS.init({
+      duration: 1200,
+    });
+
+    // Función para cargar categorias mediante AJAX
+    function cargarCategorias() {
+      $.ajax({
+        url: "{% url 'api_categorias' %}",
+        method: "GET",
+        success: function (data) {
+          let tablaCategorias = $("#tablaCategorias");
+          tablaCategorias.empty(); // Limpiar tabla antes de agregar nuevos datos
+          data.forEach(categoria => {
+            tablaCategorias.append(`
+              <tr>
+                <td>${categoria.nombre}</td>
+                <td>${categoria.descripcion}</td>
+              </tr>
+            `);
+          });
+        },
+        error: function (xhr, status, error) {
+          console.error("Error al cargar las categorías: ", error);
+        }
+      });
+    }
+
+    $(document).ready(function () {
+      cargarCategorias();
+    });
+  </script>
+</body>
+
+</html>

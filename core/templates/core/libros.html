@@ -1,0 +1,137 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Libros - Nueva Libreria</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
+</head>
+
+<body>
+
+  <nav class="navbar navbar-custom">
+    <a class="navbar-brand" href="{% url 'inicio' %}">
+      <img src="{% static 'img/logo_NL.png' %}" width="30" height="30" class="d-inline-block align-top" alt="">
+      Inicio
+    </a>
+    <a class="navbar-brand" href="{% url 'libros' %}">Libros</a>
+    <a class="navbar-brand" href="{% url 'autores' %}">Autores</a>
+    <a class="navbar-brand" href="{% url 'categorias' %}">Categorías</a>
+  </nav>
+
+  <div class="container mt-4">
+    <!-- Barra superior -->
+    <div class="bg-primary text-white text-center py-2">
+      <h4>Estos son nuestros libros</h4>
+    </div>
+
+    <!-- Tabla de libros -->
+    <div class="mt-4">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Autor</th>
+            <th>Precio</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tablaLibros">
+          <!-- Las filas se llenarán con JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal para mostrar detalles del libro -->
+  <div class="modal fade" id="detalleLibroModal" tabindex="-1" role="dialog" aria-labelledby="detalleLibroModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="detalleLibroModalLabel">Detalles del Libro</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Nombre:</strong> <span id="libroNombre"></span></p>
+          <p><strong>Autor:</strong> <span id="libroAutor"></span></p>
+          <p><strong>Año:</strong> <span id="libroAnio"></span></p>
+          <p><strong>Precio:</strong> <span id="libroPrecio"></span></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="{% static 'js/mensaje.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    // Inicializa AOS
+    AOS.init({
+      duration: 1200,
+    });
+
+    // Función para cargar libros mediante AJAX
+    function cargarLibros() {
+      $.ajax({
+        url: "{% url 'api_libros' %}",
+        method: "GET",
+        success: function (data) {
+          let tablaLibros = $("#tablaLibros");
+          tablaLibros.empty(); // Limpiar tabla antes de agregar nuevos datos
+          data.forEach(libro => {
+            tablaLibros.append(`
+              <tr>
+                <td>${libro.nombre}</td>
+                <td>${libro.autor}</td>
+                <td>${libro.precio}</td>
+                <td><button class="btn btn-info btn-sm" onclick="verMas(${libro.id})">Ver Más</button></td>
+              </tr>
+            `);
+          });
+        },
+        error: function (xhr, status, error) {
+          console.error("Error al cargar los libros: ", error);
+        }
+      });
+    }
+
+    function verMas(id) {
+      $.ajax({
+        url: `/api/libros/${id}/`,  // Endpoint para obtener detalles del libro
+        method: "GET",
+        success: function (data) {
+          // Rellena el modal con la información del libro
+          $("#libroNombre").text(data.nombre);
+          $("#libroAutor").text(data.autor);
+          $("#libroAnio").text(data.anio);
+          $("#libroPrecio").text(data.precio);
+          // Muestra el modal
+          $("#detalleLibroModal").modal('show');
+        },
+        error: function (xhr, status, error) {
+          console.error("Error al obtener los detalles del libro: ", error);
+        }
+      });
+    }
+
+    $(document).ready(function () {
+      cargarLibros();
+    });
+  </script>
+</body>
+
+</html>

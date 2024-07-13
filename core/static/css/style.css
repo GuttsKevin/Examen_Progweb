@@ -1,0 +1,95 @@
+/* Paleta de Colores */
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --navbar-bg-color: #004085;
+    --navbar-text-color: #ffffff;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+/* Navbar */
+.navbar-custom {
+    background-color: var(--navbar-bg-color) !important;
+}
+
+.navbar-custom .navbar-brand,
+.navbar-custom .navbar-nav .nav-link {
+    color: var(--navbar-text-color) !important;
+}
+
+.navbar-custom .navbar-brand:hover,
+.navbar-custom .navbar-nav .nav-link:hover {
+    color: var(--light-color) !important;
+}
+
+/* Otros estilos personalizados */
+.phone-header {
+    color: var(--dark-color);
+}
+
+.carousel-inner img {
+    height: 400px;
+    object-fit: cover;
+    margin-top: 20px;
+}
+.carousel {
+    margin-top: 20px;
+}
+
+.jumbotron {
+    margin-top: 20px;
+    background-color: white;
+}
+.beneficios-titulo {
+    font-size: 24px;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+}
+
+.beneficios-lista {
+    font-size: 18px;
+    font-family: 'Arial', sans-serif;
+    list-style-type: disc;
+    padding-left: 20px;
+    line-height: 1.6;
+}
+#formularioCorreo {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 500px;
+}
+
+#entradaCorreo {
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #000;
+    font-weight: bold;
+}
+
+.btn-primary {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.btn-secondary {
+    font-size: 16px;
+    font-weight: bold;
+}
